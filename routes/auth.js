@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs/dist/bcrypt')
 const express = require('express')
 const jwt = require('jsonwebtoken')
+const auth = require('../middleware/auth')
 const { check, validationResult } = require('express-validator')
 
 const User = require('../models/User')
@@ -12,8 +13,14 @@ const router = express.Router()
 // @route   GET api/auth
 // @desc   Get logged in user
 // @access   Private
-router.get('/', (req, res) => {
-	res.send('Get logged in user')
+router.get('/', auth, async (req, res) => {
+	try {
+		const user = await User.findById(req.user.id)
+		res.json(user)
+	} catch (err) {
+		console.err(err.message)
+		res.status(500).send('Server Error')
+	}
 })
 
 // @route   POST api/auth
