@@ -1,8 +1,16 @@
 const express = require('express')
 const connectDB = require('./config/db')
-const path = require('path')
+const cors = require('cors')
+
+// const path = require('path')
 
 const app = express()
+
+app.use(
+	cors({
+		origin: process.env.CLIENT_ORIGIN || `http://localhost:${clientDevPort}`,
+	})
+)
 
 connectDB()
 
